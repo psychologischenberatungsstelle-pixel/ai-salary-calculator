@@ -1,0 +1,207 @@
+{
+  "calculators": [
+    {
+      "slug": "ai-engineer-salary-calculator-germany",
+      "jobTitle": "AI Engineer",
+      "location": "Germany",
+      "metaTitle": "AI Engineer Salary Calculator Germany 2026 | Free Tool",
+      "metaDescription": "Calculate your AI Engineer salary in Germany. Get accurate salary ranges for junior, mid-level, and senior positions. Updated for 2026.",
+      "baseSalary": {
+        "junior": { "min": 45000, "max": 65000, "avg": 55000, "currency": "EUR" },
+        "mid": { "min": 65000, "max": 90000, "avg": 77500, "currency": "EUR" },
+        "senior": { "min": 90000, "max": 130000, "avg": 110000, "currency": "EUR" }
+      },
+      "skills": [
+        { "name": "Python", "bonus": 5000 },
+        { "name": "TensorFlow", "bonus": 8000 },
+        { "name": "PyTorch", "bonus": 8000 },
+        { "name": "MLOps", "bonus": 10000 },
+        { "name": "AWS/Azure", "bonus": 7000 }
+      ],
+      "relatedJobs": [
+        "machine-learning-engineer-salary-germany",
+        "data-scientist-salary-germany"
+      ]
+    },
+    {
+      "slug": "senior-data-scientist-salary-usa",
+      "jobTitle": "Senior Data Scientist",
+      "location": "USA",
+      "metaTitle": "Senior Data Scientist Salary USA 2026 | Calculate Your Worth",
+      "metaDescription": "Find out what senior data scientists earn in the USA. Interactive salary calculator with location and skills adjustments. Updated 2026.",
+      "baseSalary": {
+        "senior": { "min": 120000, "max": 180000, "avg": 150000, "currency": "USD" }
+      },
+      "skills": [
+        { "name": "Python", "bonus": 10000 },
+        { "name": "R", "bonus": 8000 },
+        { "name": "SQL", "bonus": 5000 },
+        { "name": "Machine Learning", "bonus": 15000 },
+        { "name": "Big Data (Spark)", "bonus": 12000 }
+      ],
+      "relatedJobs": [
+        "ai-engineer-salary-usa",
+        "machine-learning-engineer-salary-usa"
+      ]
+    },
+    {
+      "slug": "machine-learning-engineer-salary-uk",
+      "jobTitle": "Machine Learning Engineer",
+      "location": "United Kingdom",
+      "metaTitle": "Machine Learning Engineer Salary UK 2026 | Free Calculator",
+      "metaDescription": "Calculate ML Engineer salaries in the UK. See how experience and skills affect your potential earnings. Updated for 2026.",
+      "baseSalary": {
+        "junior": { "min": 40000, "max": 60000, "avg": 50000, "currency": "GBP" },
+        "mid": { "min": 60000, "max": 85000, "avg": 72500, "currency": "GBP" },
+        "senior": { "min": 85000, "max": 120000, "avg": 102500, "currency": "GBP" }
+      },
+      "skills": [
+        { "name": "Python", "bonus": 5000 },
+        { "name": "Deep Learning", "bonus": 10000 },
+        { "name": "Kubernetes", "bonus": 8000 },
+        { "name": "TensorFlow", "bonus": 7000 },
+        { "name": "NLP", "bonus": 9000 }
+      ],
+      "relatedJobs": [
+        "ai-engineer-salary-calculator-germany",
+        "senior-data-scientist-salary-usa"
+      ]
+    },
+    {
+      "slug": "junior-python-developer-salary-canada",
+      "jobTitle": "Junior Python Developer",
+      "location": "Canada",
+      "metaTitle": "Junior Python Developer Salary Canada 2026 | Entry Level Pay",
+      "metaDescription": "Starting your Python career in Canada? Calculate your expected junior developer salary with our free tool. Updated 2026.",
+      "baseSalary": {
+        "junior": { "min": 50000, "max": 70000, "avg": 60000, "currency": "CAD" }
+      },
+      "skills": [
+        { "name": "Django", "bonus": 5000 },
+        { "name": "Flask", "bonus": 4000 },
+        { "name": "FastAPI", "bonus": 6000 },
+        { "name": "PostgreSQL", "bonus": 3000 },
+        { "name": "Docker", "bonus": 5000 }
+      ],
+      "relatedJobs": ["ai-engineer-salary-calculator-germany", "machine-learning-engineer-salary-uk"]
+    },
+    {
+      "slug": "devops-engineer-salary-netherlands",
+      "jobTitle": "DevOps Engineer",
+      "location": "Netherlands",
+      "metaTitle": "DevOps Engineer Salary Netherlands 2026 | Calculate Now",
+      "metaDescription": "What do DevOps Engineers earn in the Netherlands? Use our calculator to find out based on your experience and skills.",
+      "baseSalary": {
+        "junior": { "min": 40000, "max": 55000, "avg": 47500, "currency": "EUR" },
+        "mid": { "min": 55000, "max": 75000, "avg": 65000, "currency": "EUR" },
+        "senior": { "min": 75000, "max": 100000, "avg": 87500, "currency": "EUR" }
+      },
+      "skills": [
+        { "name": "Kubernetes", "bonus": 8000 },
+        { "name": "AWS", "bonus": 7000 },
+        { "name": "Terraform", "bonus": 6000 },
+        { "name": "CI/CD", "bonus": 5000 },
+        { "name": "Docker", "bonus": 5000 }
+      ],
+      "relatedJobs": ["ai-engineer-salary-calculator-germany", "senior-data-scientist-salary-usa"]
+    },
+    {
+      "slug": "cloud-architect-salary-australia",
+      "jobTitle": "Cloud Architect",
+      "location": "Australia",
+      "metaTitle": "Cloud Architect Salary Australia 2026 | Salary Calculator",
+      "metaDescription": "Calculate Cloud Architect salaries in Australia. See what top cloud professionals earn based on experience and certifications.",
+      "baseSalary": {
+        "mid": { "min": 120000, "max": 160000, "avg": 140000, "currency": "AUD" },
+        "senior": { "min": 160000, "max": 220000, "avg": 190000, "currency": "AUD" }
+      },
+      "skills": [
+        { "name": "AWS Certified", "bonus": 15000 },
+        { "name": "Azure", "bonus": 12000 },
+        { "name": "Multi-Cloud", "bonus": 18000 },
+        { "name": "Infrastructure as Code", "bonus": 10000 },
+        { "name": "Security", "bonus": 12000 }
+      ],
+      "relatedJobs": ["devops-engineer-salary-netherlands", "machine-learning-engineer-salary-uk"]
+    },
+    {
+      "slug": "frontend-developer-salary-berlin",
+      "jobTitle": "Frontend Developer",
+      "location": "Berlin, Germany",
+      "metaTitle": "Frontend Developer Salary Berlin 2026 | Calculate Your Pay",
+      "metaDescription": "Calculate frontend developer salaries in Berlin. Interactive tool with React, Vue, Angular skill adjustments. Updated 2026.",
+      "baseSalary": {
+        "junior": { "min": 38000, "max": 52000, "avg": 45000, "currency": "EUR" },
+        "mid": { "min": 52000, "max": 72000, "avg": 62000, "currency": "EUR" },
+        "senior": { "min": 72000, "max": 95000, "avg": 83500, "currency": "EUR" }
+      },
+      "skills": [
+        { "name": "React", "bonus": 6000 },
+        { "name": "TypeScript", "bonus": 5000 },
+        { "name": "Next.js", "bonus": 7000 },
+        { "name": "Vue.js", "bonus": 5000 },
+        { "name": "Testing", "bonus": 4000 }
+      ],
+      "relatedJobs": ["ai-engineer-salary-calculator-germany", "devops-engineer-salary-netherlands"]
+    },
+    {
+      "slug": "backend-engineer-salary-switzerland",
+      "jobTitle": "Backend Engineer",
+      "location": "Switzerland",
+      "metaTitle": "Backend Engineer Salary Switzerland 2026 | Top Tech Pay",
+      "metaDescription": "Switzerland backend engineer salaries are among the highest. Calculate your potential earnings with our free tool.",
+      "baseSalary": {
+        "junior": { "min": 75000, "max": 95000, "avg": 85000, "currency": "CHF" },
+        "mid": { "min": 95000, "max": 130000, "avg": 112500, "currency": "CHF" },
+        "senior": { "min": 130000, "max": 180000, "avg": 155000, "currency": "CHF" }
+      },
+      "skills": [
+        { "name": "Go", "bonus": 10000 },
+        { "name": "Java/Spring", "bonus": 8000 },
+        { "name": "Microservices", "bonus": 12000 },
+        { "name": "PostgreSQL", "bonus": 6000 },
+        { "name": "Redis/Kafka", "bonus": 9000 }
+      ],
+      "relatedJobs": ["cloud-architect-salary-australia", "devops-engineer-salary-netherlands"]
+    },
+    {
+      "slug": "full-stack-developer-salary-singapore",
+      "jobTitle": "Full Stack Developer",
+      "location": "Singapore",
+      "metaTitle": "Full Stack Developer Salary Singapore 2026 | Calculate Now",
+      "metaDescription": "What do full stack developers earn in Singapore? Use our calculator to estimate your salary based on skills and experience.",
+      "baseSalary": {
+        "junior": { "min": 48000, "max": 65000, "avg": 56500, "currency": "SGD" },
+        "mid": { "min": 65000, "max": 95000, "avg": 80000, "currency": "SGD" },
+        "senior": { "min": 95000, "max": 140000, "avg": 117500, "currency": "SGD" }
+      },
+      "skills": [
+        { "name": "React + Node.js", "bonus": 8000 },
+        { "name": "Cloud (AWS/GCP)", "bonus": 10000 },
+        { "name": "TypeScript", "bonus": 6000 },
+        { "name": "GraphQL", "bonus": 7000 },
+        { "name": "MongoDB", "bonus": 5000 }
+      ],
+      "relatedJobs": ["backend-engineer-salary-switzerland", "frontend-developer-salary-berlin"]
+    },
+    {
+      "slug": "ai-researcher-salary-france",
+      "jobTitle": "AI Researcher",
+      "location": "France",
+      "metaTitle": "AI Researcher Salary France 2026 | Research Position Pay",
+      "metaDescription": "Calculate AI Researcher salaries in France. See what academic and industry research positions pay in 2026.",
+      "baseSalary": {
+        "mid": { "min": 50000, "max": 70000, "avg": 60000, "currency": "EUR" },
+        "senior": { "min": 70000, "max": 110000, "avg": 90000, "currency": "EUR" }
+      },
+      "skills": [
+        { "name": "PhD", "bonus": 15000 },
+        { "name": "Published Papers", "bonus": 10000 },
+        { "name": "Deep Learning", "bonus": 12000 },
+        { "name": "Computer Vision", "bonus": 10000 },
+        { "name": "NLP", "bonus": 11000 }
+      ],
+      "relatedJobs": ["ai-engineer-salary-calculator-germany", "machine-learning-engineer-salary-uk"]
+    }
+  ]
+}
