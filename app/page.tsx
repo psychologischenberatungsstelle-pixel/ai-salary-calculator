@@ -1,6 +1,6 @@
 import Link from "next/link";
 import salariesData from "@/data/salaries.json";
-
+import DashboardStats from "@/components/DashboardStats";
 export default function HomePage() {
   const calculators = salariesData.calculators;
 
@@ -21,7 +21,7 @@ export default function HomePage() {
           </p>
         </div>
       </header>
-
+<DashboardStats />
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-16">
         {/* Calculator Grid */}

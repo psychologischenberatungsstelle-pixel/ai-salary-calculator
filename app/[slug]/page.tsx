@@ -1,124 +1,301 @@
-import { Metadata } from "next";
-import Link from "next/link";
-import salariesData from "@/data/salaries.json";
+// app/[slug]/page.tsx
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import fs from "node:fs";
+import path from "node:path";
+
 import SalaryCalculator from "@/components/SalaryCalculator";
 import AdBanner from "@/components/AdBanner";
+import NegotiationGuideBox from "@/components/NegotiationGuideBox";
 import AffiliateBox from "@/components/AffiliateBox";
+import RelatedLinks from "@/components/RelatedLinks";
 
-type Props = {
+/* ------------------------------ Typen ------------------------------ */
+
+export interface SalaryEntry {
+  slug: string;
+  title: string;
+  description?: string;
+  [key: string]: unknown;
+}
+
+interface IndexedEntry {
+  entry: SalaryEntry;
+  aliases: string[];
+}
+
+type PageProps = {
   params: { slug: string };
 };
 
-export async function generateStaticParams() {
-  return salariesData.calculators.map((calc) => ({
-    slug: calc.slug,
-  }));
+/* --------------------------- Konfiguration ------------------------- */
+
+const DATA_FILE = path.join(process.cwd(), "data", "salaries.json");
+const SITE_NAME = "AI Salary Calculator";
+
+const SLUG_FIELDS = [
+  "slug",
+  "id",
+  "url",
+  "path",
+  "href",
+  "link",
+  "permalink",
+  "key",
+  "route",
+];
+
+const TITLE_FIELDS = ["title", "name", "job", "jobTitle", "role", "profession"];
+
+/* ------------------------- Hilfsfunktionen ------------------------- */
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const calculator = salariesData.calculators.find(
-    (calc) => calc.slug === params.slug
-  );
+function toSlug(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
-  if (!calculator) {
-    return { title: "Calculator Not Found" };
+function cleanSlug(value: string): string {
+  let v = value.trim();
+  try {
+    v = decodeURIComponent(v);
+  } catch {
+    // ungültige Kodierung -> Wert unverändert lassen
+  }
+  v = v.split("?")[0].split("#")[0];
+  const parts = v.split("/").filter((p) => p.length > 0);
+  if (parts.length === 0) return "";
+  let last = parts[parts.length - 1];
+  if (last.toLowerCase().endsWith(".html")) last = last.slice(0, -5);
+  return last.trim();
+}
+
+function readString(item: Record<string, unknown>, keys: string[]): string {
+  for (const key of keys) {
+    const value = item[key];
+    if (typeof value === "string" && value.trim()) return value.trim();
+    if (typeof value === "number") return String(value);
+  }
+  return "";
+}
+
+/* ------------------------- Daten einlesen -------------------------- */
+
+function extractList(raw: unknown): Array<[string | null, unknown]> {
+  if (Array.isArray(raw)) {
+    return raw.map((item): [string | null, unknown] => [null, item]);
   }
 
-  return {
-    title: calculator.metaTitle,
-    description: calculator.metaDescription,
-    keywords: [calculator.jobTitle, "salary calculator", calculator.location],
-  };
+  if (isRecord(raw)) {
+    const knownKeys = [
+      "salaries",
+      "data",
+      "items",
+      "jobs",
+      "entries",
+      "calculators",
+      "professions",
+      "pages",
+      "list",
+    ];
+    for (const key of knownKeys) {
+      const value = raw[key];
+      if (Array.isArray(value)) {
+        return value.map((item): [string | null, unknown] => [null, item]);
+      }
+    }
+
+    for (const value of Object.values(raw)) {
+      if (Array.isArray(value)) {
+        return value.map((item): [string | null, unknown] => [null, item]);
+      }
+    }
+
+    const pairs = Object.entries(raw).filter(([, v]) => isRecord(v));
+    if (pairs.length > 0) {
+      return pairs.map(([key, v]): [string | null, unknown] => [key, v]);
+    }
+  }
+
+  return [];
 }
 
-export default function CalculatorPage({ params }: Props) {
-  const calculator = salariesData.calculators.find(
-    (calc) => calc.slug === params.slug
+function buildIndexedEntry(
+  keyHint: string | null,
+  item: unknown
+): IndexedEntry | null {
+  if (!isRecord(item)) return null;
+
+  const candidates: string[] = [];
+
+  for (const field of SLUG_FIELDS) {
+    const value = item[field];
+    if (typeof value === "string" || typeof value === "number") {
+      const cleaned = cleanSlug(String(value));
+      if (cleaned) candidates.push(cleaned);
+    }
+  }
+  if (keyHint) {
+    const cleaned = cleanSlug(keyHint);
+    if (cleaned) candidates.push(cleaned);
+  }
+
+  const title = readString(item, TITLE_FIELDS);
+  const country = readString(item, ["country", "land", "location", "region"]);
+  if (title) {
+    candidates.push(toSlug(title));
+    candidates.push(toSlug(title + " salary"));
+    if (country) {
+      candidates.push(toSlug(title + " " + country));
+      candidates.push(toSlug(title + " salary " + country));
+    }
+  }
+
+  const seen = new Set<string>();
+  const aliases: string[] = [];
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    const lower = candidate.toLowerCase();
+    if (seen.has(lower)) continue;
+    seen.add(lower);
+    aliases.push(candidate);
+  }
+
+  if (aliases.length === 0) return null;
+
+  const primary = aliases[0];
+  const entry = {
+    ...item,
+    slug: primary,
+    title: title || primary,
+  } as SalaryEntry;
+
+  return { entry, aliases };
+}
+
+let cache: IndexedEntry[] | null = null;
+
+function getIndex(): IndexedEntry[] {
+  if (cache) return cache;
+
+  let raw: unknown = [];
+  try {
+    raw = JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
+  } catch (error) {
+    console.error("[salaries] Konnte Datei nicht lesen: " + DATA_FILE, error);
+    raw = [];
+  }
+
+  const result: IndexedEntry[] = [];
+  for (const [keyHint, item] of extractList(raw)) {
+    const indexed = buildIndexedEntry(keyHint, item);
+    if (indexed) result.push(indexed);
+  }
+
+  cache = result;
+  return result;
+}
+
+function getSalaries(): SalaryEntry[] {
+  return getIndex().map((indexed) => indexed.entry);
+}
+
+function getSalaryBySlug(slug: string): SalaryEntry | undefined {
+  const wanted = cleanSlug(slug).toLowerCase();
+  const found = getIndex().find((indexed) =>
+    indexed.aliases.some((alias) => alias.toLowerCase() === wanted)
   );
 
-  if (!calculator) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Calculator Not Found</h1>
-          <Link href="/" className="text-blue-600 hover:underline">
-            ← Back to Home
-          </Link>
-        </div>
-      </div>
+  if (!found) {
+    console.warn(
+      "[salaries] Slug nicht gefunden: '" +
+        slug +
+        "'. Bekannte Slugs: " +
+        getIndex()
+          .flatMap((indexed) => indexed.aliases)
+          .join(", ")
     );
   }
 
+  return found?.entry;
+}
+
+/* ----------------------- generateStaticParams ---------------------- */
+
+export function generateStaticParams(): Array<{ slug: string }> {
+  const seen = new Set<string>();
+  const params: Array<{ slug: string }> = [];
+
+  for (const indexed of getIndex()) {
+    for (const alias of indexed.aliases) {
+      const lower = alias.toLowerCase();
+      if (seen.has(lower)) continue;
+      seen.add(lower);
+      params.push({ slug: alias });
+    }
+  }
+
+  console.log("[generateStaticParams] " + params.length + " Slugs");
+  return params;
+}
+
+/* ------------------------- generateMetadata ------------------------ */
+
+export function generateMetadata({ params }: PageProps): Metadata {
+  const entry = getSalaryBySlug(params.slug);
+
+  if (!entry) {
+    return { title: "Nicht gefunden | " + SITE_NAME };
+  }
+
+  const title = entry.title + " Gehaltsrechner | " + SITE_NAME;
+  const description =
+    entry.description ??
+    "Berechne dein mögliches Gehalt als " +
+      entry.title +
+      ". Kostenloser Gehaltsrechner mit aktuellen Daten.";
+
+  return {
+    title,
+    description,
+    alternates: { canonical: "/" + entry.slug },
+    openGraph: { title, description, type: "website" },
+  };
+}
+
+/* ------------------------------- Seite ----------------------------- */
+
+export default function SalaryPage({ params }: PageProps) {
+  const entry = getSalaryBySlug(params.slug);
+
+  if (!entry) {
+    notFound();
+  }
+
+  const related = getSalaries()
+    .filter((item) => item.slug !== entry.slug)
+    .slice(0, 6)
+    .map((item) => ({ slug: item.slug, title: item.title }));
+
   return (
-    <div className="min-h-screen">
-      <header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <Link href="/" className="text-blue-100 hover:text-white mb-4 inline-block">
-            ← All Calculators
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            {calculator.jobTitle} Salary Calculator
-          </h1>
-          <p className="text-xl text-blue-100">
-            📍 {calculator.location} • Updated for 2026
-          </p>
-        </div>
-      </header>
+    <main className="mx-auto max-w-4xl px-4 py-8">
+      <h1 className="mb-6 text-3xl font-bold">{entry.title} Gehaltsrechner</h1>
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Calculate Your Salary
-              </h2>
-              <SalaryCalculator data={calculator} />
-            </div>
+      <SalaryCalculator data={entry} />
 
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                About {calculator.jobTitle} Salaries in {calculator.location}
-              </h2>
-              <div className="prose prose-lg max-w-none text-gray-700">
-                <p className="mb-4">
-                  {calculator.jobTitle}s in {calculator.location} are among the most sought-after 
-                  professionals in the tech industry. The salary range varies significantly based on 
-                  experience level, technical skills, and the specific company.
-                </p>
-                <h3 className="text-xl font-semibold mt-6 mb-3">Salary Breakdown by Experience</h3>
-                <ul className="space-y-2">
-                  {calculator.baseSalary.junior && (
-                    <li>
-                      <strong>Junior:</strong> {calculator.baseSalary.junior.min.toLocaleString()} - {calculator.baseSalary.junior.max.toLocaleString()} {calculator.baseSalary.junior.currency}
-                    </li>
-                  )}
-                  {calculator.baseSalary.mid && (
-                    <li>
-                      <strong>Mid-Level:</strong> {calculator.baseSalary.mid.min.toLocaleString()} - {calculator.baseSalary.mid.max.toLocaleString()} {calculator.baseSalary.mid.currency}
-                    </li>
-                  )}
-                  {calculator.baseSalary.senior && (
-                    <li>
-                      <strong>Senior:</strong> {calculator.baseSalary.senior.min.toLocaleString()} - {calculator.baseSalary.senior.max.toLocaleString()} {calculator.baseSalary.senior.currency}
-                    </li>
-                  )}
-                </ul>
-              </div>
-            </div>
-          </div>
+      <AdBanner slot="1234567890" />
 
-          <div className="lg:col-span-1 space-y-6">
-            <AdBanner />
-            <AffiliateBox jobTitle={calculator.jobTitle} location={calculator.location} />
-          </div>
-        </div>
-      </div>
+      <NegotiationGuideBox />
 
-      <footer className="bg-gray-900 text-white py-8 mt-16">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-gray-400">© 2026 AI Salary Calculator</p>
-        </div>
-      </footer>
-    </div>
+      <AffiliateBox />
+
+      <RelatedLinks links={related} />
+    </main>
   );
 }

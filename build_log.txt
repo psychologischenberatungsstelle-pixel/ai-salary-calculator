@@ -1,0 +1,8 @@
+
+> ai-salary-calculator@1.0.0 build
+> next build
+
+  ▲ Next.js 14.2.5
+
+   Creating an optimized production build ...
+^C^C
