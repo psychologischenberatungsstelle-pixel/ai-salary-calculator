@@ -29,9 +29,13 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="antialiased min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        {children}
+      <body className="antialiased min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex flex-col justify-between">
+        <main>{children}</main>
+        <footer className="py-6 text-center text-sm text-gray-500 flex justify-center gap-6 border-t border-gray-200 mt-10">
+          <a href="/agb" className="hover:underline">AGB</a>
+          <a href="/datenschutz" className="hover:underline">Datenschutz</a>
+          <a href="/impressum" className="hover:underline">Impressum</a>
+        </footer>
       </body>
-    </html>
   );
 }

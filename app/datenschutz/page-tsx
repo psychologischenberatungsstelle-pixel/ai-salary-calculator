@@ -1,0 +1,44 @@
+import React from "react";
+
+export default function DatenschutzPage() {
+  return (
+    <main className="max-w-4xl mx-auto px-4 py-12 text-gray-800 space-y-6">
+      <h1 className="text-3xl font-bold mb-6">Datenschutzerklärung / Privacy Policy</h1>
+
+      <section className="space-y-2">
+        <h2 className="text-xl font-semibold">1. Geltungsbereich (EU, CH, International)</h2>
+        <p className="text-sm text-gray-600">
+          Diese Datenschutzerklärung informiert Nutzer gemäß der EU-Datenschutz-Grundverordnung (DSGVO) sowie dem Schweizer Datenschutzgesetz (nDSG) über die Art, den Umfang und den Zweck der Erhebung und Verwendung personenbezogener Daten auf dieser Website.
+        </p>
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="text-xl font-semibold">2. Verantwortlicher</h2>
+        <p className="text-sm text-gray-600">
+          Verantwortlich im Sinne der DSGVO und anderer nationaler Datenschutzgesetze ist die im Impressum genannte Person/Organisation.
+        </p>
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="text-xl font-semibold">3. Hosting (Vercel Inc.) & Internationale Datenübermittlung</h2>
+        <p className="text-sm text-gray-600">
+          Diese Website wird bei Vercel Inc. gehostet. Beim Aufruf der Seiten werden technisch notwendige Server-Logfiles verarbeitet. Datenübermittlungen in Drittstaaten (wie die USA) erfolgen auf Grundlage von Standardvertragsklauseln (SCC) der EU-Kommission.
+        </p>
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="text-xl font-semibold">4. Google AdSense & Cookies</h2>
+        <p className="text-sm text-gray-600">
+          Wir nutzen Google AdSense (Google Ireland Limited / Google LLC). Google verwendet Cookies, um Anzeigen basierend auf vorherigen Besuchen des Nutzers auszuliefern. Nutzer können die personalisierte Werbung über die Google-Anzeigeneinstellungen deaktivieren.
+        </p>
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="text-xl font-semibold">5. Betroffenenrechte</h2>
+        <p className="text-sm text-gray-600">
+          Nutzer aus der EU und der Schweiz haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung sowie Datenübertragbarkeit ihrer gespeicherten personenbezogenen Daten.
+        </p>
+      </section>
+    </main>
+  );
+}
